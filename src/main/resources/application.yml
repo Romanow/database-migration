@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: database-migration
+  config:
+    import: properties-from-gradle.properties,optional:git.properties
+  profiles:
+    active: local
+  jpa:
+    generate-ddl: false
+    hibernate.ddl-auto: validate
+  liquibase:
+    change-log: classpath:db/liquibase/changelog.xml
