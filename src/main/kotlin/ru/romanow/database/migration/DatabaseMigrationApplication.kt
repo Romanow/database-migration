@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class DatabaseMigrationApplication
 
 fun main(args: Array<String>) {
-    runApplication<DatabaseMigrationApplication>(*args)
+    runApplication<DatabaseMigrationApplication>(* args)
 }

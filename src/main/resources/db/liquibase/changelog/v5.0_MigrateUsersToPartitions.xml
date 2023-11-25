@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="1" author="aromanow" labels="v5.0">
+        <tagDatabase tag="v5.0"/>
+    </changeSet>
+    <changeSet id="2" author="aromanow" labels="v5.0">
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN created_date DATE NOT NULL DEFAULT NOW();
+
+            ALTER TABLE users DROP CONSTRAINT users_pkey;
+            ALTER TABLE users ADD  CONSTRAINT users_pkey PRIMARY KEY (id, created_date);
+
+            CREATE TABLE users_temp
+            (
+                LIKE users INCLUDING ALL,
+                CONSTRAINT fk_users_address_id FOREIGN KEY (address_id) REFERENCES address (id)
+            ) PARTITION BY RANGE (created_date);
+
+            CREATE TABLE users_2021 PARTITION OF users_temp FOR VALUES FROM ('2021-01-01') TO ('2022-01-01');
+            CREATE TABLE users_2022 PARTITION OF users_temp FOR VALUES FROM ('2022-01-01') TO ('2023-01-01');
+            CREATE TABLE users_2023 PARTITION OF users_temp FOR VALUES FROM ('2023-01-01') TO ('2024-01-01');
+            CREATE TABLE users_2024 PARTITION OF users_temp FOR VALUES FROM ('2024-01-01') TO ('2025-01-01');
+            CREATE TABLE users_2025 PARTITION OF users_temp FOR VALUES FROM ('2025-01-01') TO ('2026-01-01');
+
+            INSERT INTO users_temp OVERRIDING SYSTEM
+                VALUE SELECT * FROM users;
+
+            SELECT setval('users_temp_id_seq', nextval('users_id_seq') - 1);
+
+            DROP TABLE users;
+
+            ALTER TABLE users_temp RENAME TO users;
+            ALTER SEQUENCE users_temp_id_seq RENAME TO users_id_seq;
+        </sql>
+        <rollback>
+            <sql>
+                CREATE TABLE users_temp
+                (
+                    LIKE users INCLUDING ALL,
+                    CONSTRAINT fk_users_address_id FOREIGN KEY (address_id) REFERENCES address (id)
+                );
+
+                INSERT INTO users_temp OVERRIDING SYSTEM
+                    VALUE SELECT * FROM users;
+
+                SELECT setval('users_temp_id_seq', nextval('users_id_seq') - 1);
+
+                DROP TABLE users;
+
+                ALTER TABLE users_temp RENAME TO users;
+                ALTER SEQUENCE users_temp_id_seq RENAME TO users_id_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

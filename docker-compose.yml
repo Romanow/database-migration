@@ -18,15 +18,30 @@ services:
       - db-data:/var/lib/postgresql/data
       - ./postgres/:/docker-entrypoint-initdb.d/
 
-  database-migration:
-    build: .
-    image: ${REPOSITORY_NAME}/database-migration:v1.0
-    container_name: store
+  migration-container:
+    build:
+      context: .
+      dockerfile: migration-container/Dockerfile
+    image: ${REPOSITORY_NAME}/migration-container:v1.0
+    container_name: migration-container
+    command: [ "update" ]
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://postgres:5432/migration
+      LIQUIBASE_COMMAND_USERNAME: program
+      LIQUIBASE_COMMAND_PASSWORD: test
     depends_on:
       postgres:
         condition: service_healthy
+
+  migration-application:
+    build: .
+    image: ${REPOSITORY_NAME}/migration-application:v1.0
+    container_name: migration-application
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      migration-container:
+        condition: service_completed_successfully
 
 volumes:
   db-data:

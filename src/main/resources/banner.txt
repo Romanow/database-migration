@@ -7,7 +7,7 @@
 ==========================================================================================
 Profile: ${spring.profiles.active}
 Application name: ${spring.application.name}
-Application version: ${application.version}
+Application version: ${git.build.version}
 ==========================================================================================
 Built from branch: ${git.branch}
 Commit id: ${git.commit.id.abbrev}

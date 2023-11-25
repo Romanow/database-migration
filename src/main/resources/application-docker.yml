@@ -4,3 +4,5 @@ spring:
     username: program
     password: test
     driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: false

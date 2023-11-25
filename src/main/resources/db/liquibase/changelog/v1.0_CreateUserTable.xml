@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+    <changeSet id="1" author="aromanow" labels="v1.0">
+        <tagDatabase tag="v1.0"/>
+    </changeSet>
+    <changeSet id="2" author="aromanow" labels="v1.0">
+        <sql>
+            CREATE TABLE users
+            (
+                id       INT         NOT NULL PRIMARY KEY,
+                name     VARCHAR(10) NOT NULL,
+                status   VARCHAR(10),
+                location VARCHAR(80)
+            );
+        </sql>
+        <rollback>
+            <sql>
+                DROP TABLE users;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="3" author="aromanow" labels="v1.0">
+        <sql>
+            INSERT INTO users (id, name, status, location)
+            VALUES (1, 'Alex', 'APPROVED', 'Moscow'),
+                   (2, 'Kate', 'APPROVED', 'Moscow'),
+                   (3, 'Ivan', 'NEW', 'SPb'),
+                   (4, 'Mike', 'NEW', 'Moscow region'),
+                   (5, 'Dima', 'APPROVED', 'Rostov');
+        </sql>
+        <rollback>
+            TRUNCATE TABLE users;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
