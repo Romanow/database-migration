@@ -1,0 +1,38 @@
+image:
+  repository: romanowalex/migration-application
+  tag: v6.0
+
+ports:
+  internal: 8080
+
+database:
+  username: program
+  password: test
+
+ingress:
+  enabled: true
+  name: migration-application
+  domain: local
+
+profile: k8s
+
+resources:
+  requests:
+    cpu: 1
+    memory: 2048Mi
+  limits:
+    cpu: 1
+    memory: 2048Mi
+
+initContainers:
+  - name: "schema-migration-{{ .Release.Name }}"
+    image: romanowalex/liquibase-container:latest
+    imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+    args: ["update"]
+    env:
+      - name: LIQUIBASE_COMMAND_URL
+        value: jdbc:postgresql://postgres:5432/migration
+      - name: LIQUIBASE_COMMAND_USERNAME
+        value: "{{ .Values.database.username }}"
+      - name: LIQUIBASE_COMMAND_PASSWORD
+        value: "{{ .Values.database.password }}"

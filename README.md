@@ -12,7 +12,7 @@
 ```shell
 $ docker run --rm \
     --network database-migration \
-    romanowalex/migration-container:latest \
+    romanowalex/liquibase-container:latest \
     rollback --tag=v3.0 \
     --url=jdbc:postgresql://postgres:5432/migration \
     --username=program \
@@ -83,3 +83,21 @@ GET http://localhost:8080/api/v1/users
 4. [Миграция v4.0: Изменение типа колонки status на enum](src/main/resources/db/liquibase/changelog/v4.0_ChangeStatusToEnum.xml)
 5. [Миграция v5.0: Партиционирование таблицы users](src/main/resources/db/liquibase/changelog/v5.0_MigrateUsersToPartitions.xml)
 6. [Миграция v6.0: Увеличение поля login до 80 символов и добавление новых пользователей](src/main/resources/db/liquibase/changelog/v6.0_EnlargeLoginFieldSize.xml)
+
+## Тестирование в кластере k8s
+
+```shell
+# create local cluster
+$ kind create cluster --config kind.yml
+$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+
+# install required repos
+$ helm repo add romanow https://romanow.github.io/helm-charts/
+$ helm repo update
+
+# install postgres
+$ helm install postgres romanow/postgres --values postgres/values.yaml
+
+# install service
+$ helm install migration-application romanow/java-service --values=migration-application/values.yaml
+```
