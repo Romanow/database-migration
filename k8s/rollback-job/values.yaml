@@ -1,0 +1,18 @@
+image:
+  pullPolicy: IfNotPresent
+  repository: romanowalex/liquibase-container
+  tag: latest
+
+environments:
+  - name: LIQUIBASE_COMMAND_URL
+    value: jdbc:postgresql://postgres:5432/migration
+  - name: LIQUIBASE_COMMAND_USERNAME
+    value: program
+  - name: LIQUIBASE_COMMAND_PASSWORD
+    value: test
+
+rollbackTag: "v1.0"
+
+args:
+  - rollback
+  - --tag={{ .Values.rollbackTag }}

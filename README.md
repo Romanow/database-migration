@@ -100,4 +100,7 @@ $ helm install postgres romanow/postgres --values postgres/values.yaml
 
 # install service
 $ helm install migration-application romanow/java-service --values=migration-application/values.yaml
+
+# rollback
+$ helm install rollback-to-v3 romanow/common-job --values=rollback-job/values.yaml --set rollbackTag=v3.0
 ```
