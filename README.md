@@ -9,6 +9,16 @@
 2. При откате использовать последнюю версию и помимо `helm rollback <release>`, запускать job для отката до
    тега `liquibase rollback --tag=$ROLLBACK_TAG`.
 
+```shell
+$ docker run --rm \
+    --network database-migration \
+    romanowalex/migration-container:latest \
+    rollback --tag=v3.0 \
+    --url=jdbc:postgresql://postgres:5432/migration \
+    --username=program \
+    --password=test
+```
+
 ### Прямые и обратные операции
 
 |                         Операция                          |                                 Revert                                 |

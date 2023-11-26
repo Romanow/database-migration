@@ -22,7 +22,7 @@ services:
     build:
       context: .
       dockerfile: migration-container/Dockerfile
-    image: ${REPOSITORY_NAME}/migration-container:v1.0
+    image: ${REPOSITORY_NAME}/migration-container:latest
     container_name: migration-container
     command: [ "update" ]
     environment:
@@ -45,3 +45,7 @@ services:
 
 volumes:
   db-data:
+
+networks:
+  default:
+    name: database-migration

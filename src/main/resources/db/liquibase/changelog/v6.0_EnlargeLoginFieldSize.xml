@@ -4,7 +4,6 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
-
     <changeSet id="1" author="aromanow" labels="v6.0">
         <tagDatabase tag="v6.0"/>
     </changeSet>
@@ -33,5 +32,6 @@
                    ('William', 'NEW', (SELECT id FROM address WHERE city = 'New York')),
                    ('Charlotte', 'NEW', (SELECT id FROM address WHERE city = 'New York'));
         </sql>
+        <rollback>empty</rollback>
     </changeSet>
 </databaseChangeLog>

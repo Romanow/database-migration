@@ -23,7 +23,6 @@
             </sql>
         </rollback>
     </changeSet>
-
     <changeSet id="3" author="aromanow" labels="v1.0">
         <sql>
             INSERT INTO users (id, name, status, location)
