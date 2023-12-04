@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
+        logicalFilePath="v1.0_CreateUserTable.xml"
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
     <changeSet id="1" author="aromanow" labels="v1.0">
-        <tagDatabase tag="v1.0"/>
-    </changeSet>
-    <changeSet id="2" author="aromanow" labels="v1.0">
         <sql>
             CREATE TABLE users
             (
@@ -23,7 +21,7 @@
             </sql>
         </rollback>
     </changeSet>
-    <changeSet id="3" author="aromanow" labels="v1.0">
+    <changeSet id="2" author="aromanow" labels="v1.0">
         <sql>
             INSERT INTO users (id, name, status, location)
             VALUES (1, 'Alex', 'APPROVED', 'Moscow'),
@@ -35,5 +33,8 @@
         <rollback>
             TRUNCATE TABLE users;
         </rollback>
+    </changeSet>
+    <changeSet id="3" author="aromanow" labels="v1.0">
+        <tagDatabase tag="v1.0"/>
     </changeSet>
 </databaseChangeLog>

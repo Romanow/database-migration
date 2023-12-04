@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
+        logicalFilePath="v3.0_CreateAddressTable.xml"
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
     <changeSet id="1" author="aromanow" labels="v3.0">
-        <tagDatabase tag="v3.0"/>
-    </changeSet>
-    <changeSet id="2" author="aromanow" labels="v3.0">
         <sql>
             CREATE TABLE address
             (
@@ -39,5 +37,8 @@
                 DROP TABLE address;
             </sql>
         </rollback>
+    </changeSet>
+    <changeSet id="2" author="aromanow" labels="v3.0">
+        <tagDatabase tag="v3.0"/>
     </changeSet>
 </databaseChangeLog>

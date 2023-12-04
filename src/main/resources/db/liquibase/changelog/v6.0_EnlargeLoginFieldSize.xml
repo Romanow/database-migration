@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
+        logicalFilePath="v6.0_EnlargeLoginFieldSize.xml"
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
     <changeSet id="1" author="aromanow" labels="v6.0">
-        <tagDatabase tag="v6.0"/>
-    </changeSet>
-    <changeSet id="2" author="aromanow" labels="v6.0">
         <sql>
             ALTER TABLE users
                 ALTER COLUMN name SET DATA TYPE VARCHAR(80);
@@ -21,17 +19,21 @@
             </sql>
         </rollback>
     </changeSet>
-    <changeSet id="3" author="aromanow" labels="v6.0">
+    <changeSet id="2" author="aromanow" labels="v6.0">
         <sql>
-            INSERT INTO address (city) VALUES ('New York');
+            INSERT INTO address (city) VALUES ('New York') ON CONFLICT DO NOTHING;
 
             INSERT INTO users (name, status, address_id)
             VALUES ('Alexander', 'NEW', (SELECT id FROM address WHERE city = 'Moscow')),
                    ('Maximilian', 'NEW', (SELECT id FROM address WHERE city = 'New York')),
                    ('Christopher', 'NEW', (SELECT id FROM address WHERE city = 'New York')),
                    ('William', 'NEW', (SELECT id FROM address WHERE city = 'New York')),
-                   ('Charlotte', 'NEW', (SELECT id FROM address WHERE city = 'New York'));
+                   ('Charlotte', 'NEW', (SELECT id FROM address WHERE city = 'New York'))
+                ON CONFLICT DO NOTHING;
         </sql>
         <rollback>empty</rollback>
+    </changeSet>
+    <changeSet id="3" author="aromanow" labels="v6.0">
+        <tagDatabase tag="v6.0"/>
     </changeSet>
 </databaseChangeLog>

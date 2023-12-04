@@ -18,30 +18,22 @@ services:
       - db-data:/var/lib/postgresql/data
       - ./postgres/:/docker-entrypoint-initdb.d/
 
-  liquibase-container:
-    build:
-      context: .
-      dockerfile: liquibase-container/Dockerfile
-    image: ${REPOSITORY_NAME}/liquibase-container:latest
-    container_name: liquibase-container
-    command: [ "update" ]
-    environment:
-      LIQUIBASE_COMMAND_URL: jdbc:postgresql://postgres:5432/migration
-      LIQUIBASE_COMMAND_USERNAME: program
-      LIQUIBASE_COMMAND_PASSWORD: test
-    depends_on:
-      postgres:
-        condition: service_healthy
-
   migration-application:
     build: .
-    image: ${REPOSITORY_NAME}/migration-application:v6.0
+    image: romanowalex/migration-application:v6.0
     container_name: migration-application
     environment:
       SPRING_PROFILES_ACTIVE: docker
+    healthcheck:
+      test: [ "CMD", "curl", "--silent", "--fail", "http://localhost:8080/manage/health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    ports:
+      - "8080:8080"
     depends_on:
-      liquibase-container:
-        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
 
 volumes:
   db-data:

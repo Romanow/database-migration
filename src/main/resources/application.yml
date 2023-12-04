@@ -20,6 +20,7 @@ spring:
     open-in-view: false
   liquibase:
     change-log: classpath:db/liquibase/changelog.xml
+    test-rollback-on-update: true
 
 management:
   endpoint.health.probes.enabled: true

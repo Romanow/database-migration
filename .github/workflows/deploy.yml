@@ -1,0 +1,59 @@
+name: Deploy
+on:
+  workflow_dispatch:
+    inputs:
+      image_version:
+        description: Image version to deploy
+        type: string
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy version ${{ inputs.image_version }} to k8s
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v2
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Install DigitalOcean
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+      - name: Setup DigitalOcean k8s config
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ vars.CLUSTER_NAME }}
+
+      - name: Add helm repo
+        run: |
+          helm repo add romanow https://romanow.github.io/helm-charts/
+          helm repo update
+
+      - name: Install Postgres
+        run: |
+          helm upgrade \
+            postgres \
+            romanow/postgres \
+            --values k8s/postgres/values.yaml \
+            --install \
+            --wait
+
+      - name: Install application service
+        run: |
+          helm upgrade \
+            migration-application \
+            romanow/java-service \
+            --values=k8s/migration-application/values.yaml \
+            --set image.tag="$IMAGE_VERSION" \
+            --set ingress.name=k8s \
+            --set ingress.domain=romanow-alex.ru \
+            --description "$IMAGE_VERSION" \
+            --install \
+            --wait
+        env:
+          IMAGE_VERSION: ${{ inputs.image_version }}

@@ -23,16 +23,3 @@ resources:
   limits:
     cpu: 1
     memory: 2048Mi
-
-initContainers:
-  - name: "schema-migration-{{ .Release.Name }}"
-    image: romanowalex/liquibase-container:latest
-    imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-    args: ["update"]
-    env:
-      - name: LIQUIBASE_COMMAND_URL
-        value: jdbc:postgresql://postgres:5432/migration
-      - name: LIQUIBASE_COMMAND_USERNAME
-        value: "{{ .Values.database.username }}"
-      - name: LIQUIBASE_COMMAND_PASSWORD
-        value: "{{ .Values.database.password }}"

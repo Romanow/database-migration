@@ -1,0 +1,56 @@
+name: Rollback
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to rollback changes
+        type: string
+        required: true
+
+jobs:
+  build:
+    name: Rollback to version ${{ inputs.version }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v2
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Install DigitalOcean
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+      - name: Setup DigitalOcean k8s config
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ vars.CLUSTER_NAME }}
+
+      - name: Add helm repo
+        run: |
+          helm repo add romanow https://romanow.github.io/helm-charts/
+          helm repo update
+
+      - name: Rollback database to version ${{ inputs.version }}
+        run: |
+          helm install \
+            --generate-name \
+            romanow/common-job \
+            --values=k8s/rollback-job/values.yaml \
+            --set rollbackTag="$VERSION" \
+            --wait
+        env:
+          VERSION: ${{ inputs.version }}
+
+      - name: Rollback helm release
+        run: |
+          REVISION=$(helm history --output json migration-application | jq 'map(select(.description=='\"$VERSION\"')) | first | .revision')
+          if [ -z "$REVISION" ]; then
+            echo "Not found revision for version $VERSION"
+            exit 1
+          fi
+          echo "Rollback release to $REVISION"
+          helm rollback migration-application "$REVISION" --wait
+        env:
+          VERSION: ${{ inputs.version }}

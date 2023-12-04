@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
+        logicalFilePath="v5.0_MigrateUsersToPartitions.xml"
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
     <changeSet id="1" author="aromanow" labels="v5.0">
-        <tagDatabase tag="v5.0"/>
-    </changeSet>
-    <changeSet id="2" author="aromanow" labels="v5.0">
         <sql>
             ALTER TABLE users
                 ADD COLUMN created_date DATE NOT NULL DEFAULT NOW();
@@ -36,6 +34,7 @@
 
             ALTER TABLE users_temp RENAME TO users;
             ALTER SEQUENCE users_temp_id_seq RENAME TO users_id_seq;
+            ALTER TABLE users RENAME CONSTRAINT users_temp_pkey TO users_pkey;
         </sql>
         <rollback>
             <sql>
@@ -54,7 +53,15 @@
 
                 ALTER TABLE users_temp RENAME TO users;
                 ALTER SEQUENCE users_temp_id_seq RENAME TO users_id_seq;
+                ALTER TABLE users RENAME CONSTRAINT users_temp_pkey TO users_pkey;
+
+                ALTER TABLE users DROP CONSTRAINT users_pkey;
+                ALTER TABLE users ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+                ALTER TABLE users DROP COLUMN created_date;
             </sql>
         </rollback>
+    </changeSet>
+    <changeSet id="2" author="aromanow" labels="v5.0">
+        <tagDatabase tag="v5.0"/>
     </changeSet>
 </databaseChangeLog>
