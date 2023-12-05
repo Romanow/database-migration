@@ -2,6 +2,8 @@ package ru.romanow.database.migration.domain
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -20,8 +22,9 @@ data class User(
     @Column(name = "name", length = 10, nullable = false)
     var name: String? = null,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 10)
-    var status: String? = null,
+    var status: Status? = null,
 
     @ManyToOne
     @JoinColumn(name = "address_id")
