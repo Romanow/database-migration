@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        logicalFilePath="v2.0_ChangeIdToIdentity.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+    <changeSet id="1" author="aromanow" labels="v2.0">
+        <sql>
+            ALTER TABLE users
+                ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (SEQUENCE NAME users_id_seq);
+
+            SELECT setval('users_id_seq', (SELECT count(1) FROM users));
+        </sql>
+        <rollback>
+            <sql>
+                ALTER TABLE users ALTER COLUMN id DROP IDENTITY;
+            </sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="2" author="aromanow" labels="v2.0">
+        <tagDatabase tag="v2.0"/>
+    </changeSet>
+</databaseChangeLog>
