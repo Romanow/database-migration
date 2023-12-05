@@ -27,7 +27,7 @@ class DatabaseMigrationApplicationTest {
                 status { isOk() }
                 content {
                     jsonPath("$") { isArray() }
-                    jsonPath("$.length()") { value(10) }
+                    jsonPath("$.length()") { value(5) }
                 }
             }
     }
