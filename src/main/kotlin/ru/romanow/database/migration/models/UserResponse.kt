@@ -4,5 +4,5 @@ data class UserResponse(
     val id: Int? = null,
     val name: String? = null,
     val status: String? = null,
-    val location: String? = null,
+    val address: String? = null,
 )

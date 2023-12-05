@@ -14,6 +14,6 @@ class UserServiceImpl(
     override fun findAll(): List<UserResponse> =
         userRepository
             .findAll()
-            .map { UserResponse(id = it.id, name = it.name, status = it.status, location = it.location) }
+            .map { UserResponse(id = it.id, name = it.name, status = it.status, address = it.address?.city) }
             .toList()
 }
