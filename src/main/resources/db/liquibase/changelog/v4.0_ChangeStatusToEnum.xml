@@ -14,7 +14,7 @@
         <rollback>
             <sql>
                 ALTER TABLE users
-                ALTER COLUMN status SET DATA TYPE VARCHAR(10) USING status::VARCHAR;
+                    ALTER COLUMN status SET DATA TYPE VARCHAR(10) USING status::VARCHAR;
 
                 DROP TYPE USER_STATUS;
             </sql>

@@ -39,12 +39,12 @@
             <sql>
                 CREATE TABLE users_temp
                 (
-                LIKE users INCLUDING ALL,
-                CONSTRAINT fk_users_address_id FOREIGN KEY (address_id) REFERENCES address (id)
+                    LIKE users INCLUDING ALL,
+                    CONSTRAINT fk_users_address_id FOREIGN KEY (address_id) REFERENCES address (id)
                 );
 
                 INSERT INTO users_temp OVERRIDING SYSTEM
-                VALUE SELECT * FROM users;
+                    VALUE SELECT * FROM users;
 
                 SELECT setval('users_temp_id_seq', nextval('users_id_seq') - 1);
 

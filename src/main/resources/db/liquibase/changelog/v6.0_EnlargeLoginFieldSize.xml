@@ -14,7 +14,7 @@
                 DELETE FROM users WHERE length(name) > 10;
 
                 ALTER TABLE users
-                ALTER COLUMN name SET DATA TYPE VARCHAR(10);
+                    ALTER COLUMN name SET DATA TYPE VARCHAR(10);
             </sql>
         </rollback>
     </changeSet>
