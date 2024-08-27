@@ -99,8 +99,38 @@ $ helm repo update
 $ helm install postgres romanow/postgres --values postgres/values.yaml
 
 # install service
-$ helm install migration-application romanow/java-service --values=migration-application/values.yaml
+$ helm upgrade \
+    migration-application \
+    romanow/java-service \
+    --values=k8s/migration-application/values.yaml \
+    --set image.tag="$IMAGE_VERSION" \
+    --set ingress.name=k8s \
+    --set ingress.domain=romanow-alex.ru \
+    --description "$IMAGE_VERSION" \
+    --install \
+    --wait
 
-# rollback
-$ helm install rollback-to-v3 romanow/common-job --values=rollback-job/values.yaml --set rollbackTag=v3.0
+# rollback migration
+$ helm install \
+    --generate-name \
+    romanow/common-job \
+    --values=k8s/rollback-job/values.yaml \
+    --set rollbackTag="$VERSION" \
+    --wait
+
+# rollback revision
+$ helm rollback migration-application "$REVISION" --wait
 ```
+
+## Public report
+
+[Деплой и откат приложения и миграций БД](report/README.md)
+
+## TODO
+
+1. Больше фокус на + и - миграций.
+2. Мы можем себе это позволить, потому что данных не много (> 10Gb), если данных много, то тут другие подходы.
+3. Деплоймент с даунтаймом, мы можем себе позволить релизное окно.
+4. Из-за того, что мы не удаляем данные (и не восстанавливаем из архива), у нас данные растут и мы можем проверять
+   performance.
+5. Генерация схемы через ORM – выстрел в ногу: долго, дорого, неконтролируемо.
