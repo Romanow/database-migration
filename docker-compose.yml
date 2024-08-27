@@ -19,7 +19,7 @@ services:
 
   migration-application:
     build: .
-    image: romanowalex/migration-application:v6.0
+    image: romanowalex/migration-application:v1.0
     container_name: migration-application
     environment:
       SPRING_PROFILES_ACTIVE: docker
