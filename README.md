@@ -121,7 +121,3 @@ $ helm install \
 # rollback revision
 $ helm rollback migration-application "$REVISION" --wait
 ```
-
-## Public report
-
-[Деплой и откат приложения и миграций БД](report/README.md)
