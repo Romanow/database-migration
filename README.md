@@ -1,7 +1,7 @@
-# Database migration
-
 [![Build project](https://github.com/Romanow/database-migration/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Romanow/database-migration/actions/workflows/build.yml)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+
+# Database migration
 
 ## Реализация
 
@@ -125,12 +125,3 @@ $ helm rollback migration-application "$REVISION" --wait
 ## Public report
 
 [Деплой и откат приложения и миграций БД](report/README.md)
-
-## TODO
-
-1. Больше фокус на + и - миграций.
-2. Мы можем себе это позволить, потому что данных не много (> 10Gb), если данных много, то тут другие подходы.
-3. Деплоймент с даунтаймом, мы можем себе позволить релизное окно.
-4. Из-за того, что мы не удаляем данные (и не восстанавливаем из архива), у нас данные растут и мы можем проверять
-   performance.
-5. Генерация схемы через ORM – выстрел в ногу: долго, дорого, неконтролируемо.
