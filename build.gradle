@@ -10,7 +10,7 @@ plugins {
 }
 
 ext {
-    jetbrainsAnnotationsVersion = "24.0.1"
+    jetbrainsAnnotationsVersion = "25.0.0"
     postgresContainerVersion = "1.20.1"
 }
 
